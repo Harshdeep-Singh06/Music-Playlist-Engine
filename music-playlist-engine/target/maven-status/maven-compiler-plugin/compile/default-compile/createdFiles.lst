@@ -1,0 +1,11 @@
+com\musicplaylist\controller\AddToPlaylistServlet.class
+com\musicplaylist\controller\LogoutServlet.class
+com\musicplaylist\util\Auth.class
+com\musicplaylist\util\DBConnection.class
+com\musicplaylist\controller\DashboardServlet.class
+com\musicplaylist\controller\RegisterServlet.class
+com\musicplaylist\controller\PlaylistServlet.class
+com\musicplaylist\controller\RemoveFromPlaylistServlet.class
+com\musicplaylist\controller\LoginServlet.class
+com\musicplaylist\controller\PlaylistViewServlet.class
+com\musicplaylist\controller\SongServlet.class

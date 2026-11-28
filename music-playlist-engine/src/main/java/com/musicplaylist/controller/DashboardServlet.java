@@ -1,0 +1,9 @@
+package com.musicplaylist.controller;
+import com.musicplaylist.util.*;import jakarta.servlet.*;import jakarta.servlet.annotation.*;import jakarta.servlet.http.*;import java.io.*;import java.sql.*;import java.util.*;
+@WebServlet("/dashboard") public class DashboardServlet extends HttpServlet {protected void doGet(HttpServletRequest q,HttpServletResponse p)throws ServletException,IOException{
+ Integer uid=Auth.userId(q);if(uid==null){p.sendRedirect(q.getContextPath()+"/login");return;}List<Map<String,Object>> songs=new ArrayList<>(),pls=new ArrayList<>();String term=q.getParameter("q");if(term!=null&&term.isBlank())term=null;
+ try(Connection c=DBConnection.getConnection();PreparedStatement s=c.prepareStatement("SELECT id,title,artist,album,genre FROM songs WHERE (? IS NULL OR title LIKE ? OR artist LIKE ?) ORDER BY title")){
+ String t=term==null?null:"%"+term+"%";s.setString(1,t);s.setString(2,t);s.setString(3,t);try(ResultSet r=s.executeQuery()){while(r.next()){Map<String,Object> m=new HashMap<>();for(String k:List.of("id","title","artist","album","genre"))m.put(k,r.getObject(k));songs.add(m);}}
+ try(PreparedStatement x=c.prepareStatement("SELECT id,name FROM playlists WHERE user_id=? ORDER BY id DESC")){x.setInt(1,uid);try(ResultSet r=x.executeQuery()){while(r.next()){Map<String,Object>m=new HashMap<>();m.put("id",r.getInt(1));m.put("name",r.getString(2));pls.add(m);}}}
+ }catch(SQLException x){throw new ServletException(x);}q.setAttribute("songs",songs);q.setAttribute("playlists",pls);q.setAttribute("query",term==null?"":term);q.getRequestDispatcher("/dashboard.jsp").forward(q,p);
+ }}
